@@ -31,7 +31,7 @@ public class StreamTest {
             "Alice",
             20,
             new Address("1235"),
-            Arrays.asList(new MobileNumber("1111"), new MobileNumber("3333"), new MobileNumber("1233")));
+            Arrays.asList(new MobileNumber("1111"), new MobileNumber("3333"), new MobileNumber("1233"), new MobileNumber("1234")));
  
         Student student3 = new Student(
             "Wally",
@@ -54,9 +54,14 @@ public class StreamTest {
 
         
         // Code your Solution here
-
-        
-        
+        System.out.println("====================== (1) =========================");
+        Optional<Student> possibleBob = students.stream().filter(s -> s.getName().equals("Bob")).findAny();
+        if(possibleBob.isPresent()) {
+        	System.out.println(possibleBob.get().getName());
+        } else {
+        	System.out.println("No Student found");
+        }
+        System.out.println("======================== (2) ===============================");
         
         /***************************************************************************
          (2) Get the student with matching address "1235" and print their name to the console.
@@ -68,9 +73,12 @@ public class StreamTest {
         
         // Code your Solution here
 
+        Optional<Student> s1 = students.stream()
+        		.filter(s -> s.getAddress().getZipcode().equals("1235"))
+        		.findFirst();
         
-        
-        
+        System.out.println(s1.isPresent() ? s1.get().getName() : "No Student found");
+        System.out.println("========================== (3) ==========================");
         
         /****************************************************************************
          (3) Get all the students that have the mobile number "3333" and print their
@@ -80,8 +88,13 @@ public class StreamTest {
         
         // Code your Solution here
 
-        
-        
+        List<Student> studentsWith3333 = students.stream()
+        		.filter(s -> s.getMobileNumbers()
+        				.stream()
+        				.anyMatch(a -> a.getNumber().equals("3333"))
+        		).collect(Collectors.toList());
+        studentsWith3333.forEach(e -> System.out.println(e.getName()));
+        System.out.println("============================== (4) ==============================");
         
         
         /***************************************************************************
@@ -92,7 +105,17 @@ public class StreamTest {
         
         // Code your Solution here
         
-        
+        List<Student> studentsWith1233And1234 = students.stream()
+        		.filter(s -> s.getMobileNumbers()
+        				.stream()
+        				.anyMatch(a -> a.getNumber().equals("1233"))
+        				)
+        		.filter(s -> s.getMobileNumbers()
+        				.stream()
+        				.anyMatch(a -> a.getNumber().equals("1234"))
+        				)
+        		.collect(Collectors.toList());
+        studentsWith1233And1234.forEach(e -> System.out.println(e.getName()));
         
         
         
@@ -114,11 +137,12 @@ public class StreamTest {
             Arrays.asList(new MobileNumber("11111"), new MobileNumber("33331"), new MobileNumber("12331")));
  
         List<TempStudent> tmpStudents = Arrays.asList(tmpStud1, tmpStud2);
+        System.out.println("==================================== (5) ===============================");
         
         // Code your Solution here, don't touch the code above
  
-
-        
+        List<TempStudent> studentList = tmpStudents.stream().collect(Collectors.toList());
+        System.out.println(studentList);
         
         
  
@@ -128,22 +152,28 @@ public class StreamTest {
              Print it to the console.
         ****************************************************************************/
 
-        
+        System.out.println("================================ (6) ===========================");
         // Code your Solution here
-
         
+        List<String> studentNames = studentList.stream()
+        		.map(s -> s.name)
+        		.collect(Collectors.toList());
         
-        
+        System.out.println(studentNames);
         
         /***************************************************************************
           (7) Convert List<Students> to a single String called name with just their names.
           	  Print that String to the console.
         ****************************************************************************/
 
+        System.out.println("============================ (7) ===============================");
         
         // Code your Solution here
-
-        
+        String concatStudents = studentNames.stream().collect(StringBuilder::new, StringBuilder::append,
+                StringBuilder::append)
+        		.toString();
+        concatStudents = studentNames.stream().collect(Collectors.joining(", "));
+        System.out.println(concatStudents);
         
         
         
@@ -153,10 +183,10 @@ public class StreamTest {
         *****************************************************************************/
         List<String> nameList =
             Arrays.asList("Bob", "Danny", "Alice", "Eddie", "Cathy");
- 
-        // Code your Solution here, don't touch the code above
-
         
+        // Code your Solution here, don't touch the code above
+        System.out.println("======================== 8 ===========================");
+        nameList.stream().map(a -> a.toUpperCase()).forEach(s -> System.out.println(s));
         
         
         
@@ -168,9 +198,9 @@ public class StreamTest {
             Arrays.asList("Bob", "Danny", "Alice", "Eddie", "Cathy");
  
         // Code your Solution here, don't touch the code above
-
-
+        System.out.println("======================== 9 ===========================");
         
+        namesList.stream().sorted().forEach(s -> System.out.println(s));
         
  
     }
